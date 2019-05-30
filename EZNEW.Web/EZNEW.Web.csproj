@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>MicBeach.Web</AssemblyName>
-    <RootNamespace>MicBeach.Web</RootNamespace>
+    <AssemblyName>EZNEW.Web</AssemblyName>
+    <RootNamespace>EZNEW.Web</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
