@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>MicBeach.Web</AssemblyName>
+    <RootNamespace>MicBeach.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DI\ServiceProviderConfig.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EZNEW.Develop" Version="2.0.0" />
+    <PackageReference Include="IdentityModel" Version="3.10.7" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>
