@@ -63,8 +63,19 @@ namespace EZNEW.Web.DI
             if (isDev)
             {
                 appPath = Path.Combine(appPath, "bin");
-                DebugCombineContentPath(ref appPath);
-                ReleaseCombineContentPath(ref appPath);
+                var debugPath = Path.Combine(appPath, "Debug");
+                var relaeasePath = Path.Combine(appPath, "Release");
+                DateTime debugLastWriteTime = DateTime.MinValue;
+                DateTime releaseLastWriteTime = DateTime.MinValue;
+                if (Directory.Exists(debugPath))
+                {
+                    debugLastWriteTime = Directory.GetLastWriteTime(debugPath);
+                }
+                if (Directory.Exists(relaeasePath))
+                {
+                    releaseLastWriteTime = Directory.GetLastWriteTime(relaeasePath);
+                }
+                appPath = debugLastWriteTime >= releaseLastWriteTime ? debugPath : relaeasePath;
                 var frameworkName = Assembly.GetEntryAssembly().GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
                 if (frameworkName.IsNullOrEmpty())
                 {
@@ -121,18 +132,6 @@ c.Name.IndexOf("DataAccess") >= 0
                     }
                 }
             }
-        }
-
-        [Conditional("DEBUG")]
-        static void DebugCombineContentPath(ref string parentPath)
-        {
-            parentPath = Path.Combine(parentPath, "Debug");
-        }
-
-        [Conditional("RELEASE")]
-        static void ReleaseCombineContentPath(ref string parentPath)
-        {
-            parentPath = Path.Combine(parentPath, "Release");
         }
     }
 }
