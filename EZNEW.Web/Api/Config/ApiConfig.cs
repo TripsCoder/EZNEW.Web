@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace EZNEW.Web.Config.App
+namespace EZNEW.Web.Api.Config
 {
     /// <summary>
-    /// Application Config
+    /// Api config
     /// </summary>
-    public class ApplicationConfig
+    public class ApiConfig
     {
         /// <summary>
-        /// app info
+        /// api collection
         /// </summary>
-        public ApplicationInfo Current
+        public List<ApiObject> Apis
         {
             get; set;
         }

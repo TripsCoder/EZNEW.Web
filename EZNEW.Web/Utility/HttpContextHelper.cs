@@ -7,6 +7,9 @@ using System.Text;
 
 namespace EZNEW.Web.Utility
 {
+    /// <summary>
+    /// http context helper
+    /// </summary>
     public static class HttpContextHelper
     {
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using EZNEW.Web.Config.App;
+﻿using EZNEW.Framework.Application;
 using EZNEW.Framework.IoC;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -53,7 +53,7 @@ namespace EZNEW.Web.Security.Authorization
             {
                 ControllerCode = context.RouteData.Values["controller"]?.ToString().ToUpper() ?? string.Empty,
                 ActionCode = context.RouteData.Values["action"]?.ToString().ToUpper() ?? string.Empty,
-                Application = ContainerManager.Resolve<IOptions<ApplicationConfig>>()?.Value.Current,
+                Application = ApplicationManager.Current,
                 Claims = context.HttpContext.User?.Claims?.ToDictionary(c => c.Type, c => c.Value) ?? new Dictionary<string, string>(0)
             }).ConfigureAwait(false);
             switch (verifyResult.VerifyValue)

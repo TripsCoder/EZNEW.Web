@@ -9,10 +9,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace EZNEW.Web.Utility
 {
+    /// <summary>
+    /// url helper
+    /// </summary>
     public static class UrlHelper
     {
         #region Url Encode/Decode
 
+        /// <summary>
+        /// url encode
+        /// </summary>
+        /// <param name="url">url</param>
+        /// <returns></returns>
         public static string UrlEncode(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -22,6 +30,11 @@ namespace EZNEW.Web.Utility
             return HttpUtility.UrlEncode(url);
         }
 
+        /// <summary>
+        /// url decode
+        /// </summary>
+        /// <param name="url">url</param>
+        /// <returns></returns>
         public static string UrlDecode(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -33,10 +46,12 @@ namespace EZNEW.Web.Utility
 
         #endregion
 
+        #region url parameter
+
         /// <summary>
-        /// remove query parameters
+        /// get url without parameter
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="url">url</param>
         /// <returns></returns>
         public static string GetUrlWithOutParameter(string url)
         {
@@ -88,9 +103,9 @@ namespace EZNEW.Web.Utility
         /// remove url parameters
         /// </summary>
         /// <param name="request">request</param>
-        /// <param name="parameterNames">parameter names</param>
+        /// <param name="removeParameterNames">remove parameter names</param>
         /// <returns></returns>
-        public static string RemoveUrlParameters(HttpRequest request, IEnumerable<string> parameterNames)
+        public static string RemoveUrlParameters(HttpRequest request, IEnumerable<string> removeParameterNames)
         {
             if (request == null)
             {
@@ -98,7 +113,7 @@ namespace EZNEW.Web.Utility
             }
             string[] queryParameterNames = request.Query.Keys.ToArray();
             Dictionary<string, string> parameters = new Dictionary<string, string>();
-            foreach (string parameterKey in parameterNames)
+            foreach (string parameterKey in removeParameterNames)
             {
                 if (parameterKey.IsNullOrEmpty())
                 {
@@ -111,7 +126,7 @@ namespace EZNEW.Web.Utility
                 }
                 parameters.Add(parameterKey, parameterValue);
             }
-            return RemoveUrlParameters(request.Path, parameters, parameterNames);
+            return RemoveUrlParameters(request.Path, parameters, removeParameterNames);
         }
 
         /// <summary>
@@ -162,5 +177,7 @@ namespace EZNEW.Web.Utility
             }
             return string.Format("{0}?{1}", url, string.Join("&", parameterValueString));
         }
+
+        #endregion
     }
 }

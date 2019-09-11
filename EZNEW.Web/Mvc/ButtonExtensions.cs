@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Text;
 using EZNEW.Framework.Extension;
 using EZNEW.Web.Security.Authorization;
-using EZNEW.Web.Config.App;
 using EZNEW.Framework.IoC;
 using Microsoft.Extensions.Options;
 using EZNEW.Web.Utility;
 using System.Linq;
+using EZNEW.Framework.Application;
 
 namespace EZNEW.Web.Mvc
 {
@@ -35,7 +35,7 @@ namespace EZNEW.Web.Mvc
                 {
                     ActionCode = options.AuthorizeFunc?.ActionCode,
                     ControllerCode = options.AuthorizeFunc?.ControllerCode,
-                    Application = ContainerManager.Resolve<IOptions<ApplicationConfig>>()?.Value.Current,
+                    Application = ApplicationManager.Current,
                     Claims = HttpContextHelper.Current.User.Claims.ToDictionary(c => c.Type, c => c.Value)
                 }).Result?.AllowAccess ?? false;
                 if (!allowAccess)

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace EZNEW.Web.Utility
 {
+    /// <summary>
+    /// http request extensions
+    /// </summary>
     public static class HttpRequestExtensions
     {
         /// <summary>

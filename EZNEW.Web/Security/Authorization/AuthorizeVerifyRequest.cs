@@ -1,4 +1,4 @@
-﻿using EZNEW.Web.Config.App;
+﻿using EZNEW.Framework.Application;
 using System;
 using System.Collections.Generic;
 using System.Text;

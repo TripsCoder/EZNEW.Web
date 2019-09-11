@@ -10,6 +10,9 @@ using System.Web;
 
 namespace EZNEW.Web.Utility
 {
+    /// <summary>
+    /// http request helper
+    /// </summary>
     public static class HttpRequestHelper
     {
         /// <summary>
