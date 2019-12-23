@@ -15,7 +15,7 @@ namespace EZNEW.Web.Mvc
 {
     public static class InputExtensions
     {
-        #region Checkbox
+        #region checkbox
 
         static IHtmlContent CheckBoxInternal(IHtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> items, IDictionary<string, object> cbxHtmlAttributes, IDictionary<string, object> lableHtmlAttributes, IDictionary<string, object> itemGroupAttributes)
         {
@@ -42,7 +42,7 @@ namespace EZNEW.Web.Mvc
                 cbxTag.MergeAttribute("cbx-id", cbxId);
                 cbxTag.MergeAttribute("id", cbxId);
                 cbxTag.MergeAttributes(cbxHtmlAttributes);
-                cbxTag.MergeAttribute("type", GetInputTypeString(InputType.CheckBox));
+                cbxTag.MergeAttribute("type", GetInputTypeName(InputType.CheckBox));
                 cbxTag.MergeAttribute("value", item.Value);
                 cbxTag.MergeAttribute("name", fullName);
                 if (item.Selected)
@@ -65,10 +65,55 @@ namespace EZNEW.Web.Mvc
             return checkBoxBuilder;
         }
 
-        #region Enum To CheckBox
+        public static IHtmlContent CheckBoxInternal(this IHtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> items, IDictionary<string, object> htmlAttributes = null, IEnumerable<string> textAttributes = null, IEnumerable<string> valueAttributes = null)
+        {
+            if (items.IsNullOrEmpty())
+            {
+                return HtmlString.Empty;
+            }
+            string fullName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                throw new ArgumentException("checkbox name is null or empty");
+            }
+            var checkboxBuilder = new HtmlContentBuilder();
+            foreach (SelectListItem item in items)
+            {
+                TagBuilder cbxTag = new TagBuilder("input");
+                if (!htmlAttributes.IsNullOrEmpty())
+                {
+                    cbxTag.MergeAttributes(htmlAttributes);
+                }
+                cbxTag.MergeAttribute("type", GetInputTypeName(InputType.CheckBox));
+                cbxTag.MergeAttribute("value", item.Value);
+                cbxTag.MergeAttribute("name", fullName);
+                if (item.Selected)
+                {
+                    cbxTag.MergeAttribute("checked", "checked");
+                }
+                if (!textAttributes.IsNullOrEmpty())
+                {
+                    foreach (var textAttr in textAttributes)
+                    {
+                        cbxTag.MergeAttribute(textAttr, item.Text);
+                    }
+                }
+                if (!valueAttributes.IsNullOrEmpty())
+                {
+                    foreach (var valAttr in valueAttributes)
+                    {
+                        cbxTag.MergeAttribute(valAttr, item.Value);
+                    }
+                }
+                checkboxBuilder.AppendHtml(cbxTag);
+            }
+            return checkboxBuilder;
+        }
+
+        #region enum to checkbox
 
         /// <summary>
-        /// Enum To CheckBox
+        /// enum to checkbox
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="name">name</param>
@@ -85,7 +130,7 @@ namespace EZNEW.Web.Mvc
         }
 
         /// <summary>
-        /// Enum To CheckBox
+        /// enum to checkbox
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="name">name</param>
@@ -102,7 +147,7 @@ namespace EZNEW.Web.Mvc
         }
 
         /// <summary>
-        /// Enum To CheckBox
+        /// enum to checkbox
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="expression">Name Expression</param>
@@ -118,7 +163,7 @@ namespace EZNEW.Web.Mvc
         }
 
         /// <summary>
-        /// Enum To CheckBox
+        /// enum to checkbox
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="expression">Name Expression</param>
@@ -133,12 +178,44 @@ namespace EZNEW.Web.Mvc
             return EnumToCheckBox(htmlHelper, ExpressionHelper.GetExpressionText(expression), enumType, cbxHtmlAttributes, lableHtmlAttributes, groupHtmlAttributes, checkedValue);
         }
 
-        #endregion
-
-        #region DataTable To CheckBox
+        /// <summary>
+        /// enum to checkbox
+        /// </summary>
+        /// <param name="htmlHelper">htmlHelper</param>
+        /// <param name="name">name</param>
+        /// <param name="enumType">enum type</param>
+        /// <param name="htmlAttributes">html attributes</param>
+        /// <param name="textAttributes">text attributes</param>
+        /// <param name="valueAttributes">value attributes</param>
+        /// <returns></returns>
+        public static IHtmlContent EnumToCheckBox(this IHtmlHelper htmlHelper, string name, Enum enumType, object htmlAttributes = null, Enum checkedValue = null, IEnumerable<string> textAttributes = null, IEnumerable<string> valueAttributes = null)
+        {
+            IList<SelectListItem> items = EnumHelper.GetSelectList(enumType.GetType(), checkedValue);
+            return CheckBoxInternal(htmlHelper, name, items, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes), textAttributes, valueAttributes);
+        }
 
         /// <summary>
-        /// DataTable To CheckBox
+        /// enum to checkbox
+        /// </summary>
+        /// <param name="htmlHelper">htmlHelper</param>
+        /// <param name="name">name</param>
+        /// <param name="enumType">enum type</param>
+        /// <param name="htmlAttributes">html attributes</param>
+        /// <param name="textAttributes">text attributes</param>
+        /// <param name="valueAttributes">value attributes</param>
+        /// <returns></returns>
+        public static IHtmlContent EnumToCheckBox<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, Enum enumType, object htmlAttributes = null, Enum checkedValue = null, IEnumerable<string> textAttributes = null, IEnumerable<string> valueAttributes = null)
+        {
+            var name = ExpressionHelper.GetExpressionText(expression);
+            return EnumToCheckBox(htmlHelper, name, enumType, htmlAttributes, checkedValue, textAttributes, valueAttributes);
+        }
+
+        #endregion
+
+        #region dataTable to checkbox
+
+        /// <summary>
+        /// dataTable to checkbox
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="name">name</param>
@@ -171,7 +248,7 @@ namespace EZNEW.Web.Mvc
         }
 
         /// <summary>
-        /// DataTable To CheckBox
+        /// dataTable to checkbox
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="expression">Name Expression</param>
@@ -192,7 +269,7 @@ namespace EZNEW.Web.Mvc
 
         #endregion
 
-        #region Radio
+        #region radio
 
         static IHtmlContent RadioInternal(IHtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> items, IDictionary<string, object> cbxHtmlAttributes, IDictionary<string, object> lableHtmlAttributes, IDictionary<string, object> itemGroupAttributes)
         {
@@ -203,7 +280,7 @@ namespace EZNEW.Web.Mvc
             string fullName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
             if (string.IsNullOrWhiteSpace(fullName))
             {
-                throw new ArgumentException("Radio Control Name Is Null Or Empty");
+                throw new ArgumentException("radio name is null Or empty");
             }
             var radioBuilder = new HtmlContentBuilder();
             int i = 0;
@@ -219,7 +296,7 @@ namespace EZNEW.Web.Mvc
                 cbxTag.MergeAttribute("rdo-id", cbxId);
                 cbxTag.MergeAttribute("id", cbxId);
                 cbxTag.MergeAttributes(cbxHtmlAttributes);
-                cbxTag.MergeAttribute("type", GetInputTypeString(InputType.Radio));
+                cbxTag.MergeAttribute("type", GetInputTypeName(InputType.Radio));
                 cbxTag.MergeAttribute("value", item.Value);
                 cbxTag.MergeAttribute("name", fullName);
                 if (item.Selected)
@@ -242,10 +319,55 @@ namespace EZNEW.Web.Mvc
             return radioBuilder;
         }
 
-        #region Enum To Radio
+        public static IHtmlContent RadioInternal(this IHtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> items, IDictionary<string, object> htmlAttributes = null, IEnumerable<string> textAttributes = null, IEnumerable<string> valueAttributes = null)
+        {
+            if (items.IsNullOrEmpty())
+            {
+                return HtmlString.Empty;
+            }
+            string fullName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(name);
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                throw new ArgumentException("radio name is null or empty");
+            }
+            var radioBuilder = new HtmlContentBuilder();
+            foreach (SelectListItem item in items)
+            {
+                TagBuilder cbxTag = new TagBuilder("input");
+                if (!htmlAttributes.IsNullOrEmpty())
+                {
+                    cbxTag.MergeAttributes(htmlAttributes);
+                }
+                cbxTag.MergeAttribute("type", GetInputTypeName(InputType.Radio));
+                cbxTag.MergeAttribute("value", item.Value);
+                cbxTag.MergeAttribute("name", fullName);
+                if (item.Selected)
+                {
+                    cbxTag.MergeAttribute("checked", "checked");
+                }
+                if (!textAttributes.IsNullOrEmpty())
+                {
+                    foreach (var textAttr in textAttributes)
+                    {
+                        cbxTag.MergeAttribute(textAttr, item.Text);
+                    }
+                }
+                if (!valueAttributes.IsNullOrEmpty())
+                {
+                    foreach (var valAttr in valueAttributes)
+                    {
+                        cbxTag.MergeAttribute(valAttr, item.Value);
+                    }
+                }
+                radioBuilder.AppendHtml(cbxTag);
+            }
+            return radioBuilder;
+        }
+
+        #region enum to radio
 
         /// <summary>
-        /// Enum To Radio
+        /// enum to radio
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="name">name</param>
@@ -262,7 +384,7 @@ namespace EZNEW.Web.Mvc
         }
 
         /// <summary>
-        /// Enum To Radio
+        /// enum to radio
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="name">name</param>
@@ -279,7 +401,7 @@ namespace EZNEW.Web.Mvc
         }
 
         /// <summary>
-        /// Enum To Radio
+        /// enum to radio
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="expression">Name Expression</param>
@@ -295,7 +417,7 @@ namespace EZNEW.Web.Mvc
         }
 
         /// <summary>
-        /// Enum To Radio
+        /// enum to radio
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="expression">Name Expression</param>
@@ -310,12 +432,44 @@ namespace EZNEW.Web.Mvc
             return EnumToRadio(htmlHelper, ExpressionHelper.GetExpressionText(expression), enumType, rdoHtmlAttributes, lableHtmlAttributes, groupHtmlAttributes, checkedValue);
         }
 
-        #endregion
-
-        #region DataTable To CheckBox
+        /// <summary>
+        /// enum to radio
+        /// </summary>
+        /// <param name="htmlHelper">htmlHelper</param>
+        /// <param name="name">name</param>
+        /// <param name="enumType">enum type</param>
+        /// <param name="htmlAttributes">html attributes</param>
+        /// <param name="textAttributes">text attributes</param>
+        /// <param name="valueAttributes">value attributes</param>
+        /// <returns></returns>
+        public static IHtmlContent EnumToRadio(this IHtmlHelper htmlHelper, string name, Enum enumType, object htmlAttributes = null, Enum checkedValue = null, IEnumerable<string> textAttributes = null, IEnumerable<string> valueAttributes = null)
+        {
+            IList<SelectListItem> items = EnumHelper.GetSelectList(enumType.GetType(), checkedValue);
+            return RadioInternal(htmlHelper, name, items, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes), textAttributes, valueAttributes);
+        }
 
         /// <summary>
-        /// DataTable To Radio
+        /// enum to radio
+        /// </summary>
+        /// <param name="htmlHelper">htmlHelper</param>
+        /// <param name="name">name</param>
+        /// <param name="enumType">enum type</param>
+        /// <param name="htmlAttributes">html attributes</param>
+        /// <param name="textAttributes">text attributes</param>
+        /// <param name="valueAttributes">value attributes</param>
+        /// <returns></returns>
+        public static IHtmlContent EnumToRadio<TModel, TProperty>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression, Enum enumType, object htmlAttributes = null, Enum checkedValue = null, IEnumerable<string> textAttributes = null, IEnumerable<string> valueAttributes = null)
+        {
+            var name = ExpressionHelper.GetExpressionText(expression);
+            return EnumToRadio(htmlHelper, name, enumType, htmlAttributes, checkedValue, textAttributes, valueAttributes);
+        }
+
+        #endregion
+
+        #region dataTable to radio
+
+        /// <summary>
+        /// dataTable to radio
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="name">name</param>
@@ -347,7 +501,7 @@ namespace EZNEW.Web.Mvc
         }
 
         /// <summary>
-        /// DataTable To Radio
+        /// dataTable to radio
         /// </summary>
         /// <param name="htmlHelper">htmlHelper</param>
         /// <param name="expression">Name Expression</param>
@@ -368,9 +522,9 @@ namespace EZNEW.Web.Mvc
 
         #endregion
 
-        #region GetInputTypeString
+        #region get input type name
 
-        private static string GetInputTypeString(InputType inputType)
+        private static string GetInputTypeName(InputType inputType)
         {
             switch (inputType)
             {
